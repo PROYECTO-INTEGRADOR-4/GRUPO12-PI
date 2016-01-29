@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="periodoViewDlg" widgetVar="periodoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Datos de Periodo" showEffect="fade" hideEffect="explode">
+            <h:form id="periodoViewForm" styleClass="tblForm tblFormRowMaxWidth">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{periodoBean.selObjPeriodo != null}">
+                        <h:outputText value="Código:" />
+                        <h:outputText value="#{periodoBean.selObjPeriodo.codigo}" title="Código Período" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Descripción:" />
+                        <h:outputText value="#{periodoBean.selObjPeriodo.descripcion}" title="Descripción Período" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Fecha Inicio:" />
+                        <h:outputText value="#{utilDates.toDate1(periodoBean.selObjPeriodo.fechaInicio)}" title="Fecha Inicio" styleClass="tblFormRow">
+                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                        </h:outputText>
+
+                        <h:outputText value="Fecha Fin:" />
+                        <h:outputText value="#{utilDates.toDate1(periodoBean.selObjPeriodo.fechaFin)}" title="Fecha Fin" styleClass="tblFormRow">
+                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                        </h:outputText>
+                    </p:panelGrid>
+                    <p:separator/>
+                    <p:commandButton value="Cerrar" onclick="PF('periodoViewDialog').hide()" styleClass="btnRight"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

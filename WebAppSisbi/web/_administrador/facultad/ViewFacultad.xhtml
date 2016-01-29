@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="facultadViewDlg" widgetVar="facultadViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Datos de Facultad" showEffect="fade" hideEffect="explode">
+            <h:form id="facultadViewForm" styleClass="tblForm tblFormRowMaxWidth">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{facultadBean.selObjFacultad != null}">
+                        <h:outputText value="Código:" />
+                        <h:outputText value="#{facultadBean.selObjFacultad.codigo}" title="Código Facultad" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Nombre:" />
+                        <h:outputText value="#{facultadBean.selObjFacultad.nombre}" title="Nombre Facultad" styleClass="tblFormRow"/>
+
+                    </p:panelGrid>
+                    <p:separator/>
+                    <p:commandButton value="Cerrar" onclick="PF('facultadViewDialog').hide()" styleClass="btnRight"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
