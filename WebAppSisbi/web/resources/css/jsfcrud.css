@@ -155,9 +155,9 @@ table.ui-panelgrid.ui-widget.tblForm.tblFormBorde {
 
 /* DISE;O DE MENSAJES */
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-    border: 1px solid #FACC00;
+    border: 1px solid #66ccff;
     background: none;
-    background-color: #FFD303;
+    background-color: #66ccff;
     color: black;
 }
 
@@ -166,4 +166,20 @@ table.ui-panelgrid.ui-widget.tblForm.tblFormBorde {
     border: 1px solid #a6c9e2;
     background:none;
     color: #222222;
+}
+
+.centroImage{
+    float: none;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.centrarPanel{
+    margin-top: 20px;
+    margin: 10px auto;
+}
+.centroPanelImage{
+    margin: 0 auto;
+    float: none !important;
+    padding: 10px;
 }

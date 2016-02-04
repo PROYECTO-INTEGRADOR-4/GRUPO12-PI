@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/plantilla/templateUserEstudiante.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="Inicio - SISBI"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <p:panel header="Mis Datos" footer="SISBI System" style="margin-top:20px" styleClass="centrarPanel">
+                <h:form id="frmDataUser">
+                    <div class="centroImage">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-12,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                            <c:if test="#{loginBean.objUsuario ne null and loginBean.objUsuario.codigoQR.length()>0}">
+                                <p:graphicImage cache="false" value="#{qRBean.cargarImagenQR(loginBean.objUsuario.codigoQR)}" title="Mi código QR actual" style="border: 10px solid rgb(8, 65, 127);  border-radius: 10px;" />
+                            </c:if>
+                            <c:if test="#{loginBean.objUsuario ne null and loginBean.objUsuario.codigoQR.length()==0}">
+                                <p:graphicImage value="/resources/images/noDisponible.gif" title="No tiene ningun código QR asignado, genere uno nuevo." width="220" height="220" style="border: 10px solid rgb(8, 65, 127);  border-radius: 10px;"/>
+                            </c:if>                            
+                            <c:if test="#{qRBean.generoNuevo ne null and qRBean.generoNuevo eq true}">
+                                <p:graphicImage cache="false" value="#{qRBean.imageQR}" title="Nuevo código QR" style="border: 10px solid rgb(8, 65, 127);  border-radius: 10px;" />
+                            </c:if>                            
+                        </p:panelGrid>
+                        <p:panelGrid columns="1" columnClasses="ui-grid-col-12,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton title="Generar un código QR" value="Generar QR" actionListener="#{qRBean.generarNuevaImagenQR(loginBean.objUsuario.cedula)}" update="frmDataUser, :growl"/>
+                            <p:commandButton title="Guardar cambios" value="Guardar cambios" actionListener="#{loginBean.updateSession(loginBean.objUsuario,qRBean.codigoQR)}" update="frmDataUser, :growl"/>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                            <h:outputText value="Cédula:" style="font-weight: bold" />
+                            <h:outputText value="#{loginBean.objUsuario.cedula}" title="Cédula usuario" styleClass="tblFormRow"/>
+
+                            <h:outputText value="Nombres:" style="font-weight: bold" />
+                            <h:outputText value="#{loginBean.objUsuario.nombres}" title="Nombres de usuario" styleClass="tblFormRow"/>
+
+                            <h:outputText value="Apellidos:" style="font-weight: bold" />
+                            <h:outputText value="#{loginBean.objUsuario.apellidos}" title="Apellidos de usuario" styleClass="tblFormRow"/>
+
+                            <h:outputText value="Escuela:" style="font-weight: bold" />
+                            <h:outputText value="#{loginBean.objUsuario.objEscuela.codigo}" title="Escuela a la que pertenece" styleClass="tblFormRow"/>
+                        </p:panelGrid>
+                    </div>
+                </h:form>
+            </p:panel>
+            <f:event type="preRenderView" listener="#{qRBean.setGeneroNuevo(false)}" />
+            <h:form id="initializePageDataForm" >
+                <p:remoteCommand name="initializePageDataCommand" autoRun="true" action="#{qRBean.inicializar()}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

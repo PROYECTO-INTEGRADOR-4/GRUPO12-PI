@@ -14,11 +14,21 @@ import ec.edu.espoch.sisbi.WSInfoGeneral.Escuela;
  */
 public class CUsuario extends Persona {
 
+    private Long codigo;
+    private String codigoQR;
     private String clave;
     private CRol objRol;
     private Escuela objEscuela;
 
     public CUsuario() {
+    }
+    
+    public Long getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
     public String getClave() {
@@ -45,4 +55,11 @@ public class CUsuario extends Persona {
         this.objEscuela = objEscuela;
     }
 
+    public String getCodigoQR() {
+        return codigoQR;
+    }
+
+    public void setCodigoQR(String codigoQR) {
+        this.codigoQR = codigoQR;
+    }
 }

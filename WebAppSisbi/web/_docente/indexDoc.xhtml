@@ -6,16 +6,16 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:composition template="/plantilla/templateUserNormal.xhtml">
+    <ui:composition template="/plantilla/templateUserDocente.xhtml">
 
 
         <ui:define name="title">
-            <h:outputText value="Inicio - BSC"></h:outputText>
+            <h:outputText value="Inicio - SISBI"></h:outputText>
         </ui:define>
 
         <ui:define name="body">
-            <p:outputLabel value="Página principal de #{controladorLogin.objUsuario.alias}." styleClass="titulo"/>
-            
+            <p:outputLabel value="Página principal de #{utilString.devolverCadena(loginBean.objUsuario.nombres, loginBean.objUsuario.apellidos)}." styleClass="titulo"/>
+
         </ui:define>
     </ui:composition>
 

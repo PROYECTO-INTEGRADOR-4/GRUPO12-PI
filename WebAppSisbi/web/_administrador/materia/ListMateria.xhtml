@@ -10,17 +10,17 @@
 
 
         <ui:define name="title">
-            <h:outputText value="Sisbi - Lista usuarios"></h:outputText>
+            <h:outputText value="Sisbi - Lista materias"></h:outputText>
         </ui:define>
 
         <ui:define name="body">
             <div class="ui-grid-col-12">            
-                <h:form id="frmUsuario">
-                    <p:panel header="Usuarios">
-                        <p:dataTable id="datalist" value="#{usuarioBean.lstUsuarios}" var="item"
-                                     selectionMode="single" selection="#{usuarioBean.selObjUsuario}"
+                <h:form id="frmMateria">
+                    <p:panel header="Materias">
+                        <p:dataTable id="datalist" value="#{materiaBean.lstMaterias}" var="item"
+                                     selectionMode="single" selection="#{materiaBean.selObjMateria}"
                                      paginator="true"
-                                     rowKey="#{item.codigo}" widgetVar="myDataTable"
+                                     rowKey="#{item.codMateria}" widgetVar="myDataTable"
                                      rows="10" rowIndexVar="rowCount"
                                      rowsPerPageTemplate="10,20,30,40,50" reflow="true" 
                                      emptyMessage="No se ha encontrado datos con este criterio"
@@ -29,30 +29,24 @@
                                 <h:panelGroup id="display">
                                     <p:outputPanel>
                                         <h:outputText value="Período: " />
-                                        <h:outputText style="color: white;" value="#{usuarioBean.objPeriodo.descripcion}"/>
+                                        <h:outputText style="color: white;" value="#{periodoBean.objPeriodoActual.descripcion}"/>
                                     </p:outputPanel>
                                     <div class="ui-fluid">
                                         <p:panelGrid columns="4"  styleClass="tblForm tblFacultadItems" columnClasses="ui-grid-col-4">
 
-                                            <p:selectOneMenu id="tipoFacultad" value="#{usuarioBean.codFacultad}" required="true" requiredMessage="La facultad es requerida!">
+                                            <p:selectOneMenu id="tipoFacultad" value="#{materiaBean.codFacultad}" required="true" requiredMessage="La facultad es requerida!">
                                                 <f:selectItems value="#{selectedtemsBean.selectOneItemsFacultad}"
                                                                var="tipoFacultadItem"
                                                                itemValue="#{tipoFacultadItem}" />
-                                                <p:ajax update="datalist:tipoEscuela, frmUsuario" />
+                                                <p:ajax update="datalist:tipoEscuela, frmMateria" />
                                             </p:selectOneMenu>
-                                            <p:selectOneMenu id="tipoEscuela" value="#{usuarioBean.codEscuela}" required="true" requiredMessage="La escuela es requerida!">
-                                                <f:selectItems value="#{selectedtemsBean.getSelectOneItemsEscuela(usuarioBean.codFacultad)}"
+                                            <p:selectOneMenu id="tipoEscuela" value="#{materiaBean.codEscuela}" required="true" requiredMessage="La escuela es requerida!">
+                                                <f:selectItems value="#{selectedtemsBean.getSelectOneItemsEscuela(materiaBean.codFacultad)}"
                                                                var="tipoEscuelaItem"
                                                                itemValue="#{tipoEscuelaItem}" />
-                                                <p:ajax listener="#{usuarioBean.cargarUsuarios()}" update="frmUsuario" />
+                                                <p:ajax listener="#{materiaBean.cargarMaterias()}" update="frmMateria" />
                                             </p:selectOneMenu>
-                                            <p:selectOneMenu id="tipoUsuario" value="#{usuarioBean.rolCodigo}" required="true" requiredMessage="El rol de usuarios es requerido!">
-                                                <f:selectItems value="#{selectedtemsBean.selectOneItemsRol}"
-                                                               var="tipoUsuarioItem"
-                                                               itemValue="#{tipoUsuarioItem}" />
-                                                <p:ajax listener="#{usuarioBean.cargarUsuarios()}" update="frmUsuario" />
-                                            </p:selectOneMenu>
-                                            <p:commandButton value="Actualizar" title="Actualizar usuarios de la escuela #{usuarioBean.codEscuela} de la facultad #{usuarioBean.codFacultad} a través de servicio web." actionListener="#{usuarioBean.updateUsuarios()}" update=":growl, frmUsuario"/>
+                                            <p:commandButton value="Actualizar" title="Actualizar materias de la escuela #{materiaBean.codEscuela} facultad #{materiaBean.codFacultad} a través de servicio web." actionListener="#{materiaBean.updateMaterias()}" update=":growl, frmMateria"/>
                                         </p:panelGrid> 
                                     </div>
                                 </h:panelGroup>  
@@ -66,36 +60,42 @@
                                 </f:facet>
                                 <h:outputText value="#{rowCount+1}"/>
                             </p:column>
-                            <p:column filterMatchMode="contains" filterBy="#{item.cedula}">
+                            <p:column filterMatchMode="contains" filterBy="#{item.codMateria}">
                                 <f:facet name="header">
-                                    <h:outputText value="Cédula"/>
+                                    <h:outputText value="Código"/>
                                 </f:facet>
-                                <h:outputText value="#{item.cedula}"/>
+                                <h:outputText value="#{item.codMateria}"/>
                             </p:column>
-                            <p:column filterMatchMode="contains" filterBy="#{item.nombres}">
+                            <p:column filterMatchMode="contains" filterBy="#{item.materia}">
                                 <f:facet name="header">
-                                    <h:outputText value="Nombres"/>
+                                    <h:outputText value="Nombre"/>
                                 </f:facet>
-                                <h:outputText value="#{item.nombres}"/>
+                                <h:outputText value="#{item.materia}"/>
                             </p:column>                       
-                            <p:column filterMatchMode="contains" filterBy="#{item.apellidos}">
+                            <p:column filterMatchMode="contains" filterBy="#{item.nivel}">
                                 <f:facet name="header">
-                                    <h:outputText value="Apellidos"/>
+                                    <h:outputText value="Nivel"/>
                                 </f:facet>
-                                <h:outputText value="#{item.apellidos}"/>
+                                <h:outputText value="#{item.nivel}"/>
+                            </p:column>                       
+                            <p:column filterMatchMode="contains" filterBy="#{item.horasPracticas}">
+                                <f:facet name="header">
+                                    <h:outputText value="Número de horas"/>
+                                </f:facet>
+                                <h:outputText value="#{item.horasPracticas}"/>
                             </p:column>                       
                             <p:column style="text-align: center">  
                                 <f:facet name="header">  
                                     <h:outputText value="Acciones" />  
                                 </f:facet>  
-                                <p:commandButton id="viewButton" title="Ver" icon="ui-icon-search"  update=":usuarioViewForm, :growl" oncomplete="PF('usuarioViewDialog').show()">                                   
-                                    <f:setPropertyActionListener value="#{item}" target="#{usuarioBean.selObjUsuario}"/>
+                                <p:commandButton id="viewButton" title="Ver" icon="ui-icon-search"  update=":materiaViewForm, :growl" oncomplete="PF('materiaViewDialog').show()">                                   
+                                    <f:setPropertyActionListener value="#{item}" target="#{materiaBean.selObjMateria}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
                     </p:panel>
                 </h:form>
-                <ui:include src="ViewUsuario.xhtml"/>
+                <ui:include src="ViewMateria.xhtml"/>
             </div>
         </ui:define>
 

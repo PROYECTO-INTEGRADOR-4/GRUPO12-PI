@@ -9,7 +9,7 @@
 
 
         <ui:define name="title">
-            <h:outputText value="Autentificación - BSC"></h:outputText>
+            <h:outputText value="Autentificación - SIBI"></h:outputText>
         </ui:define>
 
         <ui:define name="body">
@@ -26,14 +26,14 @@
                             <p:panel header="Acceso" style="width:300px">
                                 <h:panelGrid columns="2" cellpadding="5">
                                     <h:outputLabel for="username" value="Usuario:" />
-                                    <p:inputText value="#{controladorLogin.objUsuario.alias}" id="username"
+                                    <p:inputText value="#{loginBean.objUsuario.cedula}" id="username"
                                                  required="true" label="username" />
                                     <h:outputLabel for="password" value="Clave:" />
-                                    <p:password value="#{controladorLogin.objUsuario.clave}" id="password" required="true"
+                                    <p:password value="#{loginBean.objUsuario.clave}" id="password" required="true"
                                                 label="password" />
                                     <f:facet name="footer">
                                         <p:commandButton id="loginButton" value="Iniciar Sesión"
-                                                         actionListener="#{controladorLogin.login}" update=":mensajes"
+                                                         actionListener="#{loginBean.login}" update=":mensajes"
                                                          oncomplete="manejarLogin(xhr, status, args)" />
                                     </f:facet>
                                 </h:panelGrid>

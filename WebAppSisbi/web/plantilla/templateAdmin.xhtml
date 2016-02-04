@@ -11,12 +11,13 @@
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
         <h:outputStylesheet library="bootstrap/css" name="bootstrap.css"/>
         <h:outputScript library="js" name="jsfcrud.js"/>
+        <h:outputScript library="bootstrap/js" name="bootstrap.js"/>
     </h:head>
 
     <h:body>
         <div class="ui-grid ui-grid-responsive">
             <div class="ui-grid-col-12">
-                <p:growl id="growl" life="6000" showDetail="true"/>
+                <p:growl id="growl" life="60000" showDetail="true"/>
                 <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
                 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                     <p:graphicImage name="images/ajax-loader.gif" />
@@ -33,13 +34,13 @@
                         <h:form id="menuForm">
                             <p:menubar>
                                 <p:submenu label="Administrar" icon="ui-icon-lightbulb">
-                                    <p:menuitem value="Usuarios" />
-                                    <p:menuitem value="Roles"  /> 
+                                    <p:menuitem value="Usuarios" outcome="/_administrador/usuario/ListUsuario.xhtml" />
+                                    <p:menuitem value="Materias" outcome="/_administrador/materia/ListMateria.xhtml" />
                                     <p:menuitem value="Facultades" outcome="/_administrador/facultad/ListFacultad.xhtml"/>
                                     <p:menuitem value="Escuelas" outcome="/_administrador/escuela/ListEscuela.xhtml"/>
                                     <p:menuitem value="Períodos" outcome="/_administrador/periodo/ListPeriodo.xhtml"/>
                                 </p:submenu>
-                                <p:submenu label="{controladorLogin.objUsuario.alias}" icon="ui-icon-gear" style="float: right;margin-right: 100px;">
+                                <p:submenu label="#{utilString.devolverCadena(loginBean.objUsuario.nombres, loginBean.objUsuario.apellidos)}" icon="ui-icon-gear" style="float: right;margin-right: 100px;">
                                     <p:menuitem value="Mis Datos"   icon="ui-icon-contact"/>
                                     <p:menuitem value="Ayuda"   icon="ui-icon-help"/>                            
                                     <p:menuitem value="Gestionar archivos"  url="#" icon="ui-icon-newwin"/>                            
@@ -47,7 +48,7 @@
                                     <p:menuitem value="Porcentajes"   icon="ui-icon-battery-2"/>                            
                                     <p:menuitem value="Descargas"  url="#" icon="ui-icon-arrowthickstop-1-s"/>                            
                                     <p:separator />
-                                    <p:menuitem value="Salir" actionListener="{controladorLogin.logout}"
+                                    <p:menuitem value="Salir" actionListener="#{loginBean.logout}"
                                                 style="margin-right:20px;"
                                                 oncomplete="logout(xhr, status, args)" icon="ui-icon-power"/>
                                 </p:submenu>
@@ -77,9 +78,17 @@
     </h:body>
     <script type="text/javascript">
         function logout(xhr, status, args) {
-            setTimeout(function () {
-                window.location = '../login.xhtml';
-            }, 500);
-        }</script>
+            var str = window.location.pathname;
+            if (str.includes("indexAdmin.xhtml")) {
+                setTimeout(function () {
+                    window.location = '../login.xhtml';
+                }, 500);
+            } else {
+                setTimeout(function () {
+                    window.location = '../../login.xhtml';
+                }, 500);
+            }
+        }
+    </script>
 
 </html>

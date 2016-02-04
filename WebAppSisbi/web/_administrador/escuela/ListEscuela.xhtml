@@ -29,7 +29,7 @@
                                 <h:panelGroup id="display">
                                     <p:panelGrid columns="2"  styleClass="tblForm tblFacultadItems">
                                         <p:selectOneMenu id="tipoFacultad" value="#{escuelaBean.codFacultad}" required="true" requiredMessage="La facultad es requerida!">
-                                            <f:selectItems value="#{facultadtemsBean.selectOneItemsVision}"
+                                            <f:selectItems value="#{selectedtemsBean.selectOneItemsFacultad}"
                                                            var="tipoFacultadItem"
                                                            itemValue="#{tipoFacultadItem}" />
                                             <p:ajax listener="#{escuelaBean.cargarEscuelas()}" update="frmEscuela" />

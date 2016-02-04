@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="materiaViewDlg" widgetVar="materiaViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Datos de Materia" showEffect="fade" hideEffect="explode">
+            <h:form id="materiaViewForm" styleClass="tblForm tblFormRowMaxWidth">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{materiaBean.selObjMateria != null}">
+                        <h:outputText value="Código:" />
+                        <h:outputText value="#{materiaBean.selObjMateria.codMateria}" title="Código Materia" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Nombre:" />
+                        <h:outputText value="#{materiaBean.selObjMateria.materia}" title="Nombre de Materia" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Nivel:" />
+                        <h:outputText value="#{materiaBean.selObjMateria.nivel}" title="Nivel de Materia" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Número de horas:" />
+                        <h:outputText value="#{materiaBean.selObjMateria.horasPracticas}" title="Número de horas de Materia" styleClass="tblFormRow"/>
+
+                    </p:panelGrid>
+                    <p:separator/>
+                    <p:commandButton value="Cerrar" onclick="PF('materiaViewDialog').hide()" styleClass="btnRight"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/plantilla/templateUserDocente.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="Registro asistencias - SISBI"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <p:panel header="Registro de asistencias" footer="SISBI System" style="margin-top:20px" styleClass="centrarPanel">
+                <h:panelGroup id="display">
+                    <h:form id="frmResgistroAsistencia">
+                        <div class="centroImage">
+                            <div class="centroPanelImage col-md-8">
+                                <p:outputPanel>
+                                    <h:outputText value="Período: " />
+                                    <h:outputText style="color: #000000;" value="#{periodoBean.objPeriodoActual.descripcion}"/>
+                                </p:outputPanel>
+                                <p:panelGrid columns="1" styleClass="tblForm tblFacultadItems" layout="grid" >
+                                    <p:selectOneMenu id="tipoFacultad"  value="#{asistenciaBean.codigoFacultad}" required="true" requiredMessage="La facultad es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.actualizarMateriasView()}" update="frmResgistroAsistencia:tipoEscuela, frmResgistroAsistencia:tipoMateria, frmResgistroAsistencia:panelCapture" />
+                                        <f:selectItems value="#{selectedtemsBean.selectOneItemsFacultad}"
+                                                       var="tipoFacultadItem"
+                                                       itemValue="#{tipoFacultadItem}" />                                    
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="tipoEscuela" value="#{asistenciaBean.codigoEscuela}" required="true" requiredMessage="La escuela es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.cargarMateriaDocente()}" update="frmResgistroAsistencia:tipoMateria, frmResgistroAsistencia:panelCapture" />
+                                        <f:selectItems value="#{selectedtemsBean.getSelectOneItemsEscuela(asistenciaBean.codigoFacultad)}"
+                                                       var="tipoEscuelaItem"
+                                                       itemValue="#{tipoEscuelaItem}" />                                    
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="tipoMateria" value="#{asistenciaBean.materia}" required="true" requiredMessage="La materia es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.materiaEscojida()}" update="frmResgistroAsistencia:panelCapture, :growl" />
+                                        <f:selectItem itemLabel="Materias" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{asistenciaBean.lstMateriasDocente}"
+                                                       var="tipoMateriaItem"
+                                                       itemValue="#{tipoMateriaItem.codigo}" itemLabel="#{tipoMateriaItem.nombre}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid> 
+                                <h:panelGrid columns="2" cellpadding="2" styleClass="centrarPanel" >
+                                    <p:photoCam  widgetVar="pc" listener="#{asistenciaBean.oncapture}" update="photo, :growl" style="margin-right: 10px; border: solid 1px rgb(20, 130, 180); border-radius: 1px;"/>
+                                    <p:outputPanel id="photo">
+                                        <p:graphicImage width="320" height="240" alt="Imagen QR capturado" title="Imagen QR capturado" name="images/#{asistenciaBean.filename}.jpeg" rendered="#{not empty asistenciaBean.filename}"  style="border: solid 1px rgb(20, 130, 180); border-radius: 1px;"/>
+                                        <p:graphicImage width="320" height="240" alt="Imagen no disponible" title="Imagen no disponible" name="images/noDisponible.gif" rendered="#{empty asistenciaBean.filename}"  style="border: solid 1px rgb(20, 130, 180); border-radius: 1px;"/>
+                                    </p:outputPanel>
+                                </h:panelGrid>
+                            </div>
+                            <p:panelGrid id="panelCapture" columns="1" columnClasses="ui-grid-col-12,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                                <c:if test="#{not empty asistenciaBean.materia}">
+                                    <p:commandButton type="button" icon="fa fa-camera" title="Capturar imagen de código QR" value="Capturar" onclick="PF('pc').capture()" />
+                                </c:if>
+                            </p:panelGrid>
+                        </div>
+                    </h:form>
+                </h:panelGroup>  
+            </p:panel>
+
+        </ui:define>
+    </ui:composition>
+
+</html>

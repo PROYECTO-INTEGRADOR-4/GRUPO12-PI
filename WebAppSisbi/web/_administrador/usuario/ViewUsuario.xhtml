@@ -8,28 +8,28 @@
 
     <ui:composition>
 
-        <p:dialog id="periodoViewDlg" widgetVar="periodoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Datos de Periodo" showEffect="fade" hideEffect="explode">
-            <h:form id="periodoViewForm" styleClass="tblForm tblFormRowMaxWidth">
+        <p:dialog id="usuarioViewDlg" widgetVar="usuarioViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Datos de Usuario" showEffect="fade" hideEffect="explode">
+            <h:form id="usuarioViewForm" styleClass="tblForm tblFormRowMaxWidth">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{periodoBean.selObjPeriodo != null}">
+                    <p:panelGrid columns="2" rendered="#{usuarioBean.selObjUsuario != null}">
                         <h:outputText value="Código:" />
-                        <h:outputText value="#{periodoBean.selObjPeriodo.codigo}" title="Código Período" styleClass="tblFormRow"/>
+                        <h:outputText value="#{usuarioBean.selObjUsuario.codigo}" title="Código Usuario" styleClass="tblFormRow"/>
 
-                        <h:outputText value="Descripción:" />
-                        <h:outputText value="#{periodoBean.selObjPeriodo.descripcion}" title="Descripción Período" styleClass="tblFormRow"/>
+                        <h:outputText value="Cédula:" />
+                        <h:outputText value="#{usuarioBean.selObjUsuario.cedula}" title="Cédula de Usuario" styleClass="tblFormRow"/>
 
-                        <h:outputText value="Fecha Inicio:" />
-                        <h:outputText value="#{utilDates.toDate1(periodoBean.selObjPeriodo.fechaInicio)}" title="Fecha Inicio" styleClass="tblFormRow">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
-                        </h:outputText>
+                        <h:outputText value="Nombres:" />
+                        <h:outputText value="#{usuarioBean.selObjUsuario.nombres}" title="Nombres de Usuario" styleClass="tblFormRow"/>
 
-                        <h:outputText value="Fecha Fin:" />
-                        <h:outputText value="#{utilDates.toDate1(periodoBean.selObjPeriodo.fechaFin)}" title="Fecha Fin" styleClass="tblFormRow">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
-                        </h:outputText>
+                        <h:outputText value="Apellidos:" />
+                        <h:outputText value="#{usuarioBean.selObjUsuario.apellidos}" title="Apellidos de Usuario" styleClass="tblFormRow"/>
+
+                        <h:outputText value="Escuela:" />
+                        <h:outputText value="#{usuarioBean.selObjUsuario.objEscuela.codigo}" title="Escuela a la que pertenece" styleClass="tblFormRow"/>
+
                     </p:panelGrid>
                     <p:separator/>
-                    <p:commandButton value="Cerrar" onclick="PF('periodoViewDialog').hide()" styleClass="btnRight"/>
+                    <p:commandButton value="Cerrar" onclick="PF('usuarioViewDialog').hide()" styleClass="btnRight"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

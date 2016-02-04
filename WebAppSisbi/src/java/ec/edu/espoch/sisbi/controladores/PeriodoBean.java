@@ -25,11 +25,13 @@ public class PeriodoBean implements Serializable {
 
     private List<Periodo> lstPeriodos;
     private Periodo objPeriodo;
+    private Periodo objPeriodoActual;
     private Periodo selObjPeriodo;
 
     public PeriodoBean() {
         lstPeriodos = new ArrayList<>();
         objPeriodo = new Periodo();
+        objPeriodoActual = new Periodo();
         selObjPeriodo = new Periodo();
     }
 
@@ -62,9 +64,26 @@ public class PeriodoBean implements Serializable {
         this.selObjPeriodo = selObjPeriodo;
     }
 
+    public Periodo getObjPeriodoActual() {
+        return objPeriodoActual;
+    }
+
+    public void setObjPeriodoActual(Periodo objPeriodoActual) {
+        this.objPeriodoActual = objPeriodoActual;
+    }
+
     public void cargarPeriodos() {
         try {
             this.lstPeriodos = MPeriodo.cargarPeriodo();
+            obtenerPeriodoActual();
+        } catch (Exception ex) {
+            Util.addErrorMessageAndDetail("Error", "Error al cargar lista de períodos. " + ex.getMessage());
+        }
+    }
+
+    public void obtenerPeriodoActual() {
+        try {
+            this.objPeriodoActual = MPeriodo.cargarPeriodoActual();
         } catch (Exception ex) {
             Util.addErrorMessageAndDetail("Error", "Error al cargar lista de períodos. " + ex.getMessage());
         }

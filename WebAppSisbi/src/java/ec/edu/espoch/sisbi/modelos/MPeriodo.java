@@ -39,6 +39,24 @@ public class MPeriodo {
         return lstPeriodos;
     }
 
+    public static Periodo cargarPeriodoActual() throws Exception {
+        Periodo objPeriodo = new Periodo();
+        try {
+
+            String sql = "select * from sisbi.fn_select_periodo_ultimo()";
+            ConjuntoResultado rs = AccesoDatos.ejecutaQuery(sql);
+            while (rs.next()) {
+                objPeriodo.setCodigo(rs.getString(0));
+                objPeriodo.setDescripcion(rs.getString(1));
+                objPeriodo.setFechaInicio(utilDates.toXMLGregorianCalendar(rs.getDate(2)));
+                objPeriodo.setFechaFin(utilDates.toXMLGregorianCalendar(rs.getDate(3)));
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return objPeriodo;
+    }
+
     public static boolean insertPeriodo(Periodo objPeriodo) throws Exception {
         boolean respuesta = false;
         try {

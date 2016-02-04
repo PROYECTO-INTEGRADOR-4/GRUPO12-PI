@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title><ui:insert name="title">Default Title</ui:insert></title>
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>        
+        <h:outputStylesheet library="bootstrap/css" name="bootstrap.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+        <h:outputScript library="bootstrap/js" name="bootstrap.js"/>
+    </h:head>
+
+    <h:body>
+        <div class="ui-fluid">
+            <p:growl id="growl" life="30000"  showDetail="true"/>
+            <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <p:graphicImage name="images/ajax-loader.gif" />
+            </p:dialog>
+            <p:layoutUnit position="north" size="100" styleClass="myBorder" >
+                <div class="centro">
+                    <p:graphicImage   value="/resources/images/chipFIE.png"   styleClass="imgPrincipal"/>                    
+                    <p:graphicImage   value="/resources/images/SGI.png"  styleClass="imgPrincipal1"/>
+                    <div class="menu">
+                        <p:outputLabel value="Registro de asistencias" styleClass="titulo1"/>
+                    </div>
+                </div>
+                <h:form id="menuForm">
+                    <p:menubar>
+                        <p:menuitem value="Inicio" outcome="/_estudiante/indexEst.xhtml" icon="ui-icon-home"/>
+                        <p:menuitem value="Avance Proyectos" url="" icon="ui-icon-arrowthick-1-ne"/>
+                        <p:submenu label="#{utilString.devolverCadena(loginBean.objUsuario.nombres, loginBean.objUsuario.apellidos)}" icon="ui-icon-gear" style="float: right;margin-right: 100px;">
+                            <p:menuitem value="Mis Datos" outcome="/_estudiante/misDatos/datos.xhtml"  icon="ui-icon-locked"/>
+                            <p:menuitem value="Ayuda"  icon="ui-icon-help"/>                            
+                            <p:separator />
+                            <p:menuitem value="Salir" actionListener="#{loginBean.logout}"
+                                        style="margin-right:20px;"
+                                        oncomplete="logout(xhr, status, args)" icon="ui-icon-power"/>
+                        </p:submenu>
+                        <f:facet name="options">
+                            <p:inputText style="margin-right:10px" placeholder="Buscar"/>
+                        </f:facet>
+                    </p:menubar>
+
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" styleClass="maxContenido">
+                <ui:insert name="body"/>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" size="110" styleClass="myBorder" >
+                <div class="centro">
+                    <p:graphicImage  value="/resources/images/CONECTADOS.png"  styleClass="imgPiePrincipal"/><br></br>
+                    <h:outputText value="Todos los derechos reservados fie." styleClass="textoPie"/>
+                </div>
+                <ui:insert name="footer"/>
+            </p:layoutUnit>
+        </div>
+    </h:body>
+    <script type="text/javascript">
+        function logout(xhr, status, args) {
+            var str = window.location.pathname;
+            if (str.includes("indexEst.xhtml")) {
+                setTimeout(function () {
+                    window.location = '../login.xhtml';
+                }, 500);
+            } else {
+                setTimeout(function () {
+                    window.location = '../../login.xhtml';
+                }, 500);
+            }
+        }
+    </script>
+</html>

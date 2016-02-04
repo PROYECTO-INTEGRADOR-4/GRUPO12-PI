@@ -7,6 +7,7 @@ package ec.edu.espoch.sisbi.modelos;
 
 import ec.edu.espoch.sisbi.WSInfoGeneral.ArrayOfEscuela;
 import ec.edu.espoch.sisbi.WSInfoGeneral.Escuela;
+import ec.edu.espoch.sisbi.WSInfoGeneral.Facultad;
 import ec.edu.espoch.sisbi.accesodatos.AccesoDatos;
 import ec.edu.espoch.sisbi.accesodatos.ConjuntoResultado;
 import ec.edu.espoch.sisbi.accesodatos.Parametro;
@@ -19,12 +20,30 @@ import java.util.List;
  */
 public class MEscuela {
 
-    public static List<Escuela> cargarEscuela(String codigo) throws Exception {
+    public static Facultad obtenerFacultad(String codigoEscuela) throws Exception {
+        Facultad objFacultad = new Facultad();
+        try {
+            ArrayList<Parametro> lstParamEscuela = new ArrayList<>();
+            lstParamEscuela.add(new Parametro(1, codigoEscuela));
+
+            String sql = "select * from sisbi.fn_select_facultad_x_escuela(?)";
+            ConjuntoResultado rs = AccesoDatos.ejecutaQuery(sql, lstParamEscuela);
+            while (rs.next()) {
+                objFacultad.setCodigo(rs.getString(0));
+                objFacultad.setNombre(rs.getString(1));
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return objFacultad;
+    }
+
+    public static List<Escuela> cargarEscuela(String codigoFacultad) throws Exception {
         List<Escuela> lstEscuelas = new ArrayList<>();
         try {
             ArrayList<Parametro> lstParamEscuela = new ArrayList<>();
-            lstParamEscuela.add(new Parametro(1, codigo));
-            
+            lstParamEscuela.add(new Parametro(1, codigoFacultad));
+
             String sql = "select * from sisbi.fn_select_x_facultad_escuela(?)";
             ConjuntoResultado rs = AccesoDatos.ejecutaQuery(sql, lstParamEscuela);
             while (rs.next()) {
