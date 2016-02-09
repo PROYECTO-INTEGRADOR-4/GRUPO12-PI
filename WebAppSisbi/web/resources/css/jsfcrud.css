@@ -37,6 +37,9 @@
 .tblFormRowMaxWidth{
     max-width: 500px;
 }
+.tblFormWidth{
+    width: 700px !important;
+}
 /*   DISE;ANDO PARTE PRINCIPAL DE AL APP*/
 .imgPrincipal1{
     float: right;

@@ -33,7 +33,8 @@
                 <h:form id="menuForm">
                     <p:menubar>
                         <p:menuitem value="Inicio" outcome="/_docente/indexDoc.xhtml" icon="ui-icon-home"/>
-                        <p:menuitem value="Asistencias" outcome="/_docente/asistencia/registroAsistencia.xhtml" icon="ui-icon-arrowthick-1-ne"/>
+                        <p:menuitem value="Registrar Asistencias" outcome="/_docente/asistencia/registroAsistencia.xhtml" icon="ui-icon-arrowthick-1-ne"/>
+                        <p:menuitem value="Ver Asistencias" outcome="/_docente/asistencia/porcentajeAsistencia.xhtml" icon="fa fa-bar-chart-o"/>
                         <p:submenu label="#{utilString.devolverCadena(loginBean.objUsuario.nombres, loginBean.objUsuario.apellidos)}" icon="ui-icon-gear" style="float: right;margin-right: 100px;">
                             <p:menuitem value="Mis Datos"  icon="ui-icon-locked"/>
                             <p:menuitem value="Ayuda"  icon="ui-icon-help"/>                            

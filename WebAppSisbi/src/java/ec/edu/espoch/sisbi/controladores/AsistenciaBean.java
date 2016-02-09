@@ -15,10 +15,15 @@ import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
+import ec.edu.espoch.sisbi.WSInfoCarrera.DictadoMateria;
+import ec.edu.espoch.sisbi.WSInfoCarrera.Estudiante;
 import ec.edu.espoch.sisbi.WSInfoCarrera.Materia;
+import ec.edu.espoch.sisbi.WSInfoGeneral.Escuela;
 import ec.edu.espoch.sisbi.WSInfoGeneral.Periodo;
 import ec.edu.espoch.sisbi.entidades.CAsistencia;
+import ec.edu.espoch.sisbi.entidades.CRol;
 import ec.edu.espoch.sisbi.entidades.CUsuario;
+import ec.edu.espoch.sisbi.modelos.MAsistencia;
 import ec.edu.espoch.sisbi.modelos.MEscuela;
 import ec.edu.espoch.sisbi.modelos.MMateria;
 import ec.edu.espoch.sisbi.modelos.MUsuario;
@@ -40,6 +45,7 @@ import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
+import org.primefaces.context.DefaultRequestContext;
 import org.primefaces.event.CaptureEvent;
 
 /**
@@ -58,11 +64,18 @@ public class AsistenciaBean implements Serializable {
     private String codigoFacultad;
     private String codigoEscuela;
     private CAsistencia objAsistencia;
+    private List<CAsistencia> lstAsistencias;
     private String filename;
     private String materia;
+    private List<Estudiante> lstEstudiante;
+    //[codigoParalelo,materiaCodigo]solo estaran disponible cuando se llame a la funcion obtenerUsuariosMateria()
+    private String codigoParalelo = "";
+    private String materiaCodigo = "";
 
     public AsistenciaBean() {
         lstMateriasDocente = new ArrayList<>();
+        lstEstudiante = new ArrayList<>();
+        lstAsistencias = new ArrayList<>();
         objAsistencia = new CAsistencia();
         materia = "";
     }
@@ -139,6 +152,22 @@ public class AsistenciaBean implements Serializable {
         this.materia = materia;
     }
 
+    public List<Estudiante> getLstEstudiante() {
+        return lstEstudiante;
+    }
+
+    public void setLstEstudiante(List<Estudiante> lstEstudiante) {
+        this.lstEstudiante = lstEstudiante;
+    }
+
+    public List<CAsistencia> getLstAsistencias() {
+        return lstAsistencias;
+    }
+
+    public void setLstAsistencias(List<CAsistencia> lstAsistencias) {
+        this.lstAsistencias = lstAsistencias;
+    }
+
     public void cargarMateriaDocente() {
         try {
             materia = "";
@@ -191,8 +220,26 @@ public class AsistenciaBean implements Serializable {
             String qr = leerCodigoQR(newFileName);
             if (MUsuario.existeQR(qr)) {
                 String id = MUsuario.obtenerId(MUsuario.descifrarQR(qr));
-                
-                Util.addSuccessMessageAndDetail("Aviso", "mensaje entendido");
+                if (!id.isEmpty()) {
+                    List<String> paralelo = MAsistencia.verificarHorarioParalelo(materia, codigoEscuela, periodo.getCodigo(), id, user.getCedula());
+                    if (!paralelo.isEmpty()) {
+                        objAsistencia.setEstado(true);
+                        objAsistencia.setFechaAsistencia(objAsistencia.fechaActual());
+                        objAsistencia.setAsistenciaHora(objAsistencia.horaActual());
+                        objAsistencia.setParalelo(paralelo.get(0));
+                        objAsistencia.setHoraCodigo(paralelo.get(1));
+                        objAsistencia.getObjUsuario().setCedula(id);
+                        objAsistencia.setObjPeriodo(periodo);
+                        objAsistencia.getObjMateria().setNombre(materia);
+                        if (MAsistencia.insertarAsistencia(objAsistencia)) {
+                            Util.addSuccessMessageAndDetail("Aviso", "Asistencia registrada correctamente, " + id);
+                        } else {
+                            Util.addErrorMessageAndDetail("Error", "No se ha realizado el registro de asistencia!");
+                        }
+                    }
+                } else {
+                    Util.addErrorMessageAndDetail("Error", "Usuario desconocido!");
+                }
             } else {
                 Util.addErrorMessageAndDetail("Error", "Código QR no válido!");
             }
@@ -231,6 +278,97 @@ public class AsistenciaBean implements Serializable {
 
     public void materiaEscojida() {
         Util.addSuccessMessageAndDetail("Aviso", "la materia escojida es: " + materia);
+    }
+
+    public void obtenerUsuariosMateria() {
+        try {
+            String codigoNivel = "";
+            materiaCodigo = MMateria.cargarMateriaByName(materia).getCodigo();
+            List<DictadoMateria> materias = MAsistencia.getDictadosMateria(codigoEscuela, materiaCodigo).getDictadoMateria();
+            for (DictadoMateria materia1 : materias) {
+                if (materia1.getDocente().getCedula().equals(user.getCedula())) {
+                    codigoNivel = materia1.getCodNivel();
+                    codigoParalelo = materia1.getParalelo();
+                    break;
+                }
+            }
+            lstEstudiante = MAsistencia.getAlumnosMateria(codigoEscuela, codigoNivel, codigoParalelo, periodo.getCodigo(), materiaCodigo).getEstudiante();
+        } catch (Exception ex) {
+            Util.addErrorMessageAndDetail("Error", "Problemas al obtener usuarios de la materia, " + ex.getMessage());
+        }
+    }
+
+    public void obtenerPocentajeAsistencia() {
+        try {
+            String codigoNivel = "";
+            materiaCodigo = MMateria.cargarMateriaByName(materia).getCodigo();
+            List<DictadoMateria> materias = MAsistencia.getDictadosMateria(codigoEscuela, materiaCodigo).getDictadoMateria();
+            for (DictadoMateria materia1 : materias) {
+                if (materia1.getDocente().getCedula().equals(user.getCedula())) {
+                    codigoNivel = materia1.getCodNivel();
+                    codigoParalelo = materia1.getParalelo();
+                    break;
+                }
+            }
+
+            lstEstudiante = MAsistencia.getAlumnosMateria(codigoEscuela, codigoNivel, codigoParalelo, periodo.getCodigo(), materiaCodigo).getEstudiante();
+            if (!lstEstudiante.isEmpty()) {
+                List<CUsuario> lstUsuario = new ArrayList<>();
+                for (Estudiante estudiante : lstEstudiante) {
+                    CUsuario objUsuario = new CUsuario();
+                    objUsuario.setCodigo((long) 0);
+                    objUsuario.setCedula(estudiante.getCedula());
+                    objUsuario.setNombres(estudiante.getNombres());
+                    objUsuario.setApellidos(estudiante.getApellidos());
+                    objUsuario.setCodigoQR("qr");
+                    objUsuario.setClave("clave");
+                    CRol objRol = new CRol();
+                    objRol.setCodigo("rol");
+                    objUsuario.setObjRol(objRol);
+                    Escuela objEscuela = new Escuela();
+                    objEscuela.setCodigo("escuela");
+                    objUsuario.setObjEscuela(objEscuela);
+                    lstUsuario.add(objUsuario);
+                }
+                lstAsistencias = MAsistencia.obtenerAsistencias(lstUsuario, codigoParalelo, periodo.getCodigo(), materiaCodigo);
+            } else {
+                Util.addErrorMessageAndDetail("Error", "No se pudo obtener lista de estudiantes del servicio web.");
+            }
+        } catch (Exception ex) {
+            Util.addErrorMessageAndDetail("Error", "Problemas al obtener registro de asistencias," + ex.getMessage());
+        }
+    }
+
+    public void registrarTodasAsistencias() {
+        try {
+            List<CAsistencia> lstAsistencia = new ArrayList<>();
+            String horaCodigo = MAsistencia.verificarHorarioDocente(materia, codigoEscuela, periodo.getCodigo(), user.getCedula());
+            if (!horaCodigo.isEmpty() && !lstEstudiante.isEmpty()) {
+                for (Estudiante estudiante : lstEstudiante) {
+                    CAsistencia asistencia = new CAsistencia();
+                    asistencia.setEstado(false);
+                    asistencia.setFechaAsistencia(asistencia.fechaActual());
+                    asistencia.setAsistenciaHora(asistencia.horaActual());
+                    asistencia.setParalelo(codigoParalelo);
+                    asistencia.setHoraCodigo(horaCodigo);
+                    asistencia.getObjUsuario().setCedula(estudiante.getCedula());
+                    asistencia.setObjPeriodo(periodo);
+                    asistencia.getObjMateria().setNombre(materia);
+                    lstAsistencia.add(asistencia);
+                }
+                if (MAsistencia.insertAsistencias(lstAsistencia, materiaCodigo)) {
+                    DefaultRequestContext.getCurrentInstance().execute("PF('asistenciasViewDialog').hide()");
+                    lstEstudiante.clear();
+                    Util.addSuccessMessageAndDetail("Aviso", "Se ha registrado las asistencias de sus alumnos correctamente.");
+                } else {
+                    Util.addErrorMessageAndDetail("Error", "Al parecer ya se ha realizado el registro de las asistencias de sus alumnos en esta materia.");
+                }
+            } else {
+                Util.addErrorMessageAndDetail("Error", "Problemas al obtener el horario del docente.");
+            }
+        } catch (Exception ex) {
+            Util.addErrorMessageAndDetail("Error", "Problemas al registrar asistencias, " + ex.getMessage());
+        }
     }
 
 }

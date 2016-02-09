@@ -8,6 +8,7 @@ package ec.edu.espoch.sisbi.modelos;
 import ec.edu.espoch.sisbi.WSInfoCarrera.ArrayOfDictadoMateria;
 import ec.edu.espoch.sisbi.WSInfoCarrera.ArrayOfMateria;
 import ec.edu.espoch.sisbi.WSInfoCarrera.ArrayOfMateriaPensum;
+import ec.edu.espoch.sisbi.WSInfoCarrera.Materia;
 import ec.edu.espoch.sisbi.WSInfoCarrera.MateriaPensum;
 import ec.edu.espoch.sisbi.accesodatos.AccesoDatos;
 import ec.edu.espoch.sisbi.accesodatos.ConjuntoResultado;
@@ -41,6 +42,24 @@ public class MMateria {
             throw e;
         }
         return lstMaterias;
+    }
+
+    public static Materia cargarMateriaByName(String nombreMateria) throws Exception {
+        Materia objMateria = new Materia();
+        try {
+            ArrayList<Parametro> lstParamMateria = new ArrayList<>();
+            lstParamMateria.add(new Parametro(1, nombreMateria));
+
+            String sql = "select * from sisbi.fn_select_materia_by_Name(?)";
+            ConjuntoResultado rs = AccesoDatos.ejecutaQuery(sql, lstParamMateria);
+            while (rs.next()) {
+                objMateria.setCodigo(rs.getString(0));
+                objMateria.setNombre(rs.getString(1));
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return objMateria;
     }
 
     public static boolean insertMaterias(List<MateriaPensum> lstMaterias, String escuelaCodigo) throws Exception {
@@ -100,6 +119,5 @@ public class MMateria {
         ec.edu.espoch.sisbi.WSInfoCarrera.InfoCarreraSoap port = service.getInfoCarreraSoap();
         return port.getMateriasDocente(codCarrera, cedula, codPeriodo);
     }
-    
-    
+
 }

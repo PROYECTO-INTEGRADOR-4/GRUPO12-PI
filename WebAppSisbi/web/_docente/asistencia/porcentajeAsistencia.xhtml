@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/plantilla/templateUserDocente.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="Registro asistencias - SISBI"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <p:panel header="Registro de asistencias" footer="SISBI System" style="margin-top:20px" styleClass="centrarPanel">
+                <h:panelGroup id="display">
+                    <h:form id="frmResgistroAsistencia">
+                        <div class="centroImage">
+                            <div class="centroPanelImage col-md-8">
+                                <p:outputPanel>
+                                    <h:outputText value="Período: " />
+                                    <h:outputText style="color: #000000;" value="#{periodoBean.objPeriodoActual.descripcion}"/>
+                                </p:outputPanel>
+                                <p:panelGrid columns="1" styleClass="tblForm tblFacultadItems" layout="grid" >
+                                    <p:selectOneMenu id="tipoFacultad"  value="#{asistenciaBean.codigoFacultad}" required="true" requiredMessage="La facultad es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.actualizarMateriasView()}" update="frmResgistroAsistencia:tipoEscuela, frmResgistroAsistencia:tipoMateria" />
+                                        <f:selectItems value="#{selectedtemsBean.selectOneItemsFacultad}"
+                                                       var="tipoFacultadItem"
+                                                       itemValue="#{tipoFacultadItem}" />                                    
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="tipoEscuela" value="#{asistenciaBean.codigoEscuela}" required="true" requiredMessage="La escuela es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.cargarMateriaDocente()}" update="frmResgistroAsistencia:tipoMateria" />
+                                        <f:selectItems value="#{selectedtemsBean.getSelectOneItemsEscuela(asistenciaBean.codigoFacultad)}"
+                                                       var="tipoEscuelaItem"
+                                                       itemValue="#{tipoEscuelaItem}" />                                    
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="tipoMateria" value="#{asistenciaBean.materia}" required="true" requiredMessage="La materia es requerida!">
+                                        <p:ajax event="change" listener="#{asistenciaBean.obtenerPocentajeAsistencia()}" update="frmResgistroAsistencia:datalist, :growl" />
+                                        <f:selectItem itemLabel="Materias" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{asistenciaBean.lstMateriasDocente}"
+                                                       var="tipoMateriaItem"
+                                                       itemValue="#{tipoMateriaItem.nombre}" itemLabel="#{tipoMateriaItem.nombre}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid> 
+                            </div>
+                            <p:dataTable id="datalist" value="#{asistenciaBean.lstAsistencias}" var="item"
+                                         selectionMode="single"
+                                         paginator="true"
+                                         rowKey="#{item.objUsuario.cedula}"
+                                         rows="10"
+                                         rowsPerPageTemplate="10,20,30,40,50"
+                                         >
+
+                                <f:facet name="header">
+                                    <p:commandButton disabled="true" id="acceptButton" icon="fa fa-users" title="Se registrará las asistencias de todos sus alumnos, en estado 'No asisitido'"  value="Registrar asistencias" update=":growl">
+
+                                    </p:commandButton>                       
+                                </f:facet>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Cédula"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.objUsuario.cedula}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Nombres"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.objUsuario.nombres}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Apellidos"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.objUsuario.apellidos}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Asistidos"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.asistidos}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="No asisitidos"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.noAsistidos}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Total asistencia"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.asistidos+item.noAsistidos}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Porcentaje asistencia"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.porcentajeAsistencia} %">
+                                        <f:convertNumber pattern="#0.0" />
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </h:form>
+                </h:panelGroup>  
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -42,7 +42,7 @@
                                         <f:selectItem itemLabel="Materias" itemValue="" noSelectionOption="true" />
                                         <f:selectItems value="#{asistenciaBean.lstMateriasDocente}"
                                                        var="tipoMateriaItem"
-                                                       itemValue="#{tipoMateriaItem.codigo}" itemLabel="#{tipoMateriaItem.nombre}" />
+                                                       itemValue="#{tipoMateriaItem.nombre}" itemLabel="#{tipoMateriaItem.nombre}" />
                                     </p:selectOneMenu>
                                 </p:panelGrid> 
                                 <h:panelGrid columns="2" cellpadding="2" styleClass="centrarPanel" >
@@ -55,14 +55,16 @@
                             </div>
                             <p:panelGrid id="panelCapture" columns="1" columnClasses="ui-grid-col-12,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
                                 <c:if test="#{not empty asistenciaBean.materia}">
-                                    <p:commandButton type="button" icon="fa fa-camera" title="Capturar imagen de código QR" value="Capturar" onclick="PF('pc').capture()" />
+                                    <p:commandButton type="button" icon="fa fa-camera" title="Capturar imagen de código QR" value="Registrar asistencia" onclick="PF('pc').capture()" />
+                                    <p:commandButton id="viewButton" title="Registrar asistencia de todos los estudiantes de la materia #{asistenciaBean.materia}." icon="ui-icon-search" value="Registrar todas las asistencias"  update=":asistenciasListForm,:growl" actionListener="#{asistenciaBean.obtenerUsuariosMateria()}" oncomplete="PF('asistenciasViewDialog').show()">
+                                    </p:commandButton>
                                 </c:if>
                             </p:panelGrid>
                         </div>
                     </h:form>
                 </h:panelGroup>  
             </p:panel>
-
+            <ui:include src="usuariosAsistencia.xhtml"/>
         </ui:define>
     </ui:composition>
 
